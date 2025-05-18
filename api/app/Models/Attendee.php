@@ -1,0 +1,37 @@
+<?php
+
+namespace App\Models;
+
+use App\Models\Scopes\OrganizationScope;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+class Attendee extends Model
+{
+    use HasFactory, SoftDeletes;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var list<string>
+     */
+    protected $fillable = [
+        'event_id',
+        'name',
+        'email',
+        'phone'
+    ];
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope(new OrganizationScope);
+    }
+
+    public function event()
+    {
+        return $this->belongsTo(Event::class);
+    }
+}
