@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\OrganizationScope;
 use Illuminate\Database\Eloquent\Model;
 
 class Event extends Model
@@ -42,7 +43,7 @@ class Event extends Model
     {
         parent::boot();
 
-        static::addGlobalScope(new \App\Models\Scopes\OrganizationScope);
+        static::addGlobalScope(new OrganizationScope);
     }
 
     /**

@@ -25,6 +25,7 @@ class User extends Authenticatable
         'organization_id',
         'password',
         'confirmed_password',
+        'role',
     ];
 
     /**
@@ -50,9 +51,25 @@ class User extends Authenticatable
         ];
     }
 
+    const ROLE = [
+        'admin' => 'admin',
+        'user' => 'user',
+        'super_admin' => 'super_admin',
+    ];
+
     public function organization()
     {
         return $this->belongsTo(Organization::class, 'organization_id');
     }
+
+    /**
+     * The boo
+     */
+    // public static function boot()
+    // {
+    //     parent::boot();
+
+    //     static::addGlobalScope(new \App\Models\Scopes\OrganizationScope);
+    // }
 
 }

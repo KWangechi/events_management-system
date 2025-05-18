@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Repositories\EventRepository;
+use Illuminate\Support\Facades\Auth;
 
 class EventService
 {
@@ -25,13 +26,14 @@ class EventService
 
     public function createEvent(array $data)
     {
+        $data['organization_id'] = Auth::user()->organization_id;
         return $this->eventRepository->create($data);
     }
-    public function updateEvent($id, array $data)
+    public function updateEvent($orgSlug, $id, array $data)
     {
         return $this->eventRepository->update($id, $data);
     }
-    public function deleteEvent($id)
+    public function deleteEvent($orgSlug, $id)
     {
         return $this->eventRepository->delete($id);
     }

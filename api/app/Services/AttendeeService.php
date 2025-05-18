@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Repositories\AttendeeRepository;
 use App\Repositories\EventRepository;
+use Symfony\Component\HttpFoundation\Response;
 
 class AttendeeService
 {
@@ -16,22 +17,40 @@ class AttendeeService
         $this->eventRepository = $eventRepository;
     }
 
-    public function register(array $data)
+    public function getAll()
+    {
+        return $this->attendeeRepository->all();
+    }
+
+    public function create($orgSlug, $eventId, array $data)
     {
 
-        $eventId = $data['event_id'];
-        $event = $this->eventRepository->find($eventId);
+        $this->eventExists($eventId);
 
-        // Check if event exists
-        if (!$event) {
-            throw new \Exception('Event not found.');
-        }
+        $data['event_id'] = $eventId;
+        return $this->attendeeRepository->create($data);
+    }
 
-        // Check if max attendees limit is set and not reached
-        if ($this->isRegistrationClosed($event)) {
-            throw new \Exception('Registration closed: maximum number of attendees reached.');
-        }
 
+    public function update($orgSlug, $eventId, $id, array $data)
+    {
+        $this->eventExists($eventId);
+        $this->getById($id);
+        return $this->attendeeRepository->update($id, $data);
+    }
+
+
+    public function delete($orgSlug, $eventId, $id)
+    {
+        $this->eventExists($eventId);
+        $this->getById($id);
+        return $this->attendeeRepository->delete($id);
+    }
+
+
+    public function register($orgSlug, $eventId, array $data)
+    {
+        $data['event_id'] = $eventId;
         return $this->attendeeRepository->create($data);
     }
 
@@ -43,5 +62,26 @@ class AttendeeService
             return $currentAttendeeCount >= $event->max_attendees;
         }
         return false;
+    }
+
+
+    public function eventExists($eventId)
+    {
+        $event = $this->eventRepository->find($eventId);
+
+        if (!$event) {
+            abort(Response::HTTP_NOT_FOUND, 'Event not found');
+        }
+        return $event;
+    }
+
+    public function getById($id)
+    {
+        // Check if the event exists
+        $attendee = $this->attendeeRepository->find($id);
+        if (!$attendee) {
+            abort(Response::HTTP_NOT_FOUND, 'Attendee not found');
+        }
+        return $attendee;
     }
 }

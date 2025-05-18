@@ -23,8 +23,9 @@ class Organization extends Model
     {
         return $this->hasMany(User::class);
     }
-    public function getRouteKeyName()
+
+    public function events()
     {
-        return 'slug';
+        return $this->hasMany(Event::class);
     }
 }

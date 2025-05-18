@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Services\EventService;
@@ -18,14 +18,14 @@ class EventController extends Controller
     public function getAllEvents()
     {
         $events = $this->eventService->getAllEvents();
-        return response()->json($events);
+        return $this->successResponse($events, 'Events retrieved successfully');
     }
 
 
     public function index()
     {
         $events = $this->eventService->getEvents();
-        return response()->json($events);
+        return $this->successResponse($events, 'Events retrieved successfully');
     }
 
     public function store(Request $request)
@@ -39,9 +39,35 @@ class EventController extends Controller
             'max_attendees' => 'required|integer',
         ]);
 
-        $data['organization_id'] = $this->eventService->createEvent($data)->id;
 
         $createdEvent = $this->eventService->createEvent($data);
         return $this->successResponse($createdEvent, 'Event Created!', 201);
+    }
+
+    public function show($orgSlug, $id)
+    {
+        $event = $this->eventService->getEvent($id);
+        return $this->successResponse($event, 'Event retrieved successfully');
+    }
+
+    public function update(Request $request, $orgSlug, $id)
+    {
+        $data = $request->validate([
+            'title' => 'sometimes|required|string',
+            'description' => 'sometimes|required|string',
+            'venue' => 'sometimes|required|string',
+            'date' => 'sometimes|required|date',
+            'price' => 'sometimes|required|numeric',
+            'max_attendees' => 'sometimes|required|integer',
+        ]);
+
+        $updatedEvent = $this->eventService->updateEvent($orgSlug, $id, $data);
+        return $this->successResponse($updatedEvent, 'Event updated successfully');
+    }
+
+    public function destroy($orgSlug, $id)
+    {
+        $this->eventService->deleteEvent($orgSlug, $id);
+        return $this->successResponse(null, 'Event deleted successfully');
     }
 }

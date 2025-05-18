@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('role')->default('user')->nullable();
             $table->foreignId('organization_id')->constrained();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
@@ -22,7 +23,6 @@ return new class extends Migration
             $table->timestamps();
 
             $table->softDeletes();
-
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {

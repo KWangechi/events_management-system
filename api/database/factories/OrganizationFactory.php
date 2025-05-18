@@ -18,7 +18,20 @@ class OrganizationFactory extends Factory
     {
         return [
             'name' => fake()->company(),
-            'slug' => fake()->unique()->slug(),
+            'slug' => substr(preg_replace('/[^a-z]/', '', strtolower(fake()->unique()->slug())), 0, 15),
         ];
     }
+
+    /**
+     * Indicate that the model's name is 'Default Organization'.
+     *
+     * @return static
+     */
+    // public function default(): static
+    // {
+    //     return $this->state(fn(array $attributes) => [
+    //         'name' => 'Default Organization',
+    //         'slug' => 'default-organization',
+    //     ]);
+    // }
 }

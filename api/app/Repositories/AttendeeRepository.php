@@ -33,7 +33,7 @@ class AttendeeRepository
 
     public function find($id)
     {
-        return Attendee::findOrFail($id);
+        return Attendee::find($id);
     }
 
     public function countByEventId($eventId)

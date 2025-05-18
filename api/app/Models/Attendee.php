@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\EventScope;
 use App\Models\Scopes\OrganizationScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -27,7 +28,7 @@ class Attendee extends Model
     {
         parent::boot();
 
-        static::addGlobalScope(new OrganizationScope);
+        static::addGlobalScope(new EventScope);
     }
 
     public function event()

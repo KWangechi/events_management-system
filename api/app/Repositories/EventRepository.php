@@ -24,7 +24,7 @@ class EventRepository
 
     public function find($id)
     {
-        return Event::findOrFail($id);
+        return Event::find($id);
     }
 
     public function update($id, array $data)
@@ -37,7 +37,7 @@ class EventRepository
     {
         $event = $this->find($id);
         $event->delete();
-        return $event;
+        return null;
     }
 
     public function findByOrganization($organizationId)
