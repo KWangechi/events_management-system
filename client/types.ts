@@ -16,6 +16,8 @@ export type Organization = {
   updatedAt?: Date;
 };
 
+
+
 export type Event = {
   id: number;
   title: string;
@@ -26,8 +28,8 @@ export type Event = {
   maxAttendees: number;
   organization_id?: number;
 
-  createdAt?: Date;
-  updatedAt?: Date;
+  created_at?: Date;
+  updated_at?: Date;
 };
 
 export type EventApiResponse = {

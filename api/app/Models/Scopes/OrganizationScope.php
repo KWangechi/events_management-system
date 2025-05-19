@@ -16,7 +16,7 @@ class OrganizationScope implements Scope
     {
         if (request()->route('organization')) {
             $organization = Organization::where('slug', request()->route('organization'))->firstOrFail();
-            $builder->where('organization_id', $organization->id);
+            $builder->where('organization_id', $organization->id)->with('organization');
         }
     }
 }

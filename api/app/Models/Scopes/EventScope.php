@@ -19,7 +19,7 @@ class EventScope implements Scope
         if (request()->route('eventId')) {
             $event = Event::where('id', request()->route('eventId'))->first();
             if ($event) {
-                $builder->where('event_id', $event->id);
+                $builder->where('event_id', $event->id)->with('event');
             } else {
                 abort(Response::HTTP_NOT_FOUND, 'Event not found');
             }
