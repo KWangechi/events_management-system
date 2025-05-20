@@ -36,10 +36,10 @@ RUN composer install --optimize-autoloader --no-dev
 RUN chmod +x /scripts/render-deploy.sh
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache /scripts/render-deploy.sh
 
-# Expose ports
-EXPOSE 80 9000
+# # Expose ports
+# EXPOSE 80 9000
 
-ENV RUN_SCRIPTS 1
+# ENV RUN_SCRIPTS 1
 
-# Start Nginx and PHP-FPM
-CMD bash -c "php artisan config:cache && php artisan route:cache && nginx -g 'daemon off;' & php-fpm"
+# # Start Nginx and PHP-FPM
+# CMD bash -c "php artisan config:cache && php artisan route:cache && nginx -g 'daemon off;' & php-fpm"
