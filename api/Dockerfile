@@ -40,4 +40,4 @@ EXPOSE 80 9000
 ENV RUN_SCRIPTS 1
 
 # Start Nginx and PHP-FPM
-CMD ["/start.sh"]
+CMD ["./scripts/render-deploy.sh"]
