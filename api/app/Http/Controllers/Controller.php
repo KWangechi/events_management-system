@@ -41,6 +41,12 @@ abstract class Controller
             'message' => $message,
         ];
 
+        // Check if a token is provided separately (not inside $data)
+        if (isset($data['token'])) {
+            $response['token'] = $data['token'];
+            unset($data['token']); // Remove token from data to avoid duplication
+        }
+
         if (!is_null($data)) {
             $response['data'] = $data;
         }

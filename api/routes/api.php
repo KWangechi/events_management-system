@@ -5,7 +5,13 @@ use App\Http\Controllers\AttendeeController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Middleware\EnsureOrganizationAdmin;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
+Route::get('/user', function (Request $request) {
+    return $request->user();
+})->middleware('auth:sanctum');
+
 
 // ------------------- AUTH ROUTES -------------------
 Route::controller(AuthController::class)->group(function () {
@@ -18,7 +24,7 @@ Route::controller(AuthController::class)->group(function () {
 // Only super admins can create organizations
 Route::middleware(['auth:sanctum', 'can:isSuperAdmin'])->group(function () {
     Route::post('/organizations', [OrganizationController::class, 'store'])->name('organizations.store');
-    // Add more super admin routes here if needed
+    Route::get('/organizations', [OrganizationController::class, 'index'])->name('organizations.index');
 });
 
 // ------------------- ORGANIZATION ADMIN ROUTES -------------------

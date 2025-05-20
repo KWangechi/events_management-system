@@ -22,9 +22,6 @@ class AuthController extends Controller
     public function register(UserRequest $userRequest): JsonResponse
     {
 
-        // dd($userRequest->all());
-        // $userRequest->validated();
-
         $user = User::create([
             'name' => $userRequest->name,
             'email' => $userRequest->email,
@@ -37,8 +34,8 @@ class AuthController extends Controller
         }
 
         return $this->successResponse([
-            'user' => $user,
-            'accessToken' => $user->createToken('auth_token')->plainTextToken
+            'user' => $user->with('organization')->first(),
+            'token' => $user->createToken('accessToken')->plainTextToken
         ], 'User registered successfully', Response::HTTP_CREATED);
     }
 
@@ -51,7 +48,7 @@ class AuthController extends Controller
     public function login(UserRequest $userRequest): JsonResponse
     {
         $userRequest->setAction('login');
-        $user = User::where('email', $userRequest->email)
+        $user = User::where('email', $userRequest->email)->with('organization')
             ->first();
 
         if (!Auth::attempt(['email' => $userRequest->email, 'password' => $userRequest->password])) {
@@ -59,7 +56,7 @@ class AuthController extends Controller
         }
 
         return $this->successResponse([
-            'accessToken' => $user->createToken('accessToken')->plainTextToken,
+            'token' => $user->createToken('accessToken')->plainTextToken,
             'user' => $user
         ], 'Logged in successfully', Response::HTTP_OK);
     }
