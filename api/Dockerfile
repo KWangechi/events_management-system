@@ -27,12 +27,14 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 # Copy application code
 COPY . /var/www/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY ./scripts/render-deploy.sh /scripts/render-deploy.sh
 
 # Install PHP dependencies
 RUN composer install --optimize-autoloader --no-dev
 
 # Set permissions
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+RUN chmod +x /scripts/render-deploy.sh
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache /scripts/render-deploy.sh
 
 # Expose ports
 EXPOSE 80 9000
