@@ -42,4 +42,4 @@ EXPOSE 80 9000
 ENV RUN_SCRIPTS 1
 
 # Start Nginx and PHP-FPM
-CMD ["./scripts/render-deploy.sh"]
+CMD bash -c "php artisan config:cache && php artisan route:cache && nginx -g 'daemon off;' & php-fpm"
