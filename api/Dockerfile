@@ -37,5 +37,7 @@ RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cac
 # Expose ports
 EXPOSE 80 9000
 
+ENV RUN_SCRIPTS 1
+
 # Start Nginx and PHP-FPM
-CMD ["./scripts/render-deploy.sh"]
+CMD ["/start.sh"]
