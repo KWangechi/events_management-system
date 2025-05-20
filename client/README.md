@@ -1,75 +1,44 @@
-# Nuxt Minimal Starter
+# Events Management System (Client)
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+A web application where users can browse company events and register to attend.
 
-## Setup
+## Features
 
-Make sure to install dependencies:
+- View upcoming and past events
+- Search and filter events by category or date
+- Register for events as a guest or registered user
+- Responsive and user-friendly interface
 
-```bash
-# npm
-npm install
+## Live Demo
 
-# pnpm
-pnpm install
+[View the live project](https://events-management-system-ten.vercel.app/)
 
-# yarn
-yarn install
+## Getting Started
 
-# bun
-bun install
-```
+1. Clone the repository:
+    ```bash
+    git clone https://github.com/your-username/events_management_system.git
+    ```
+2. Navigate to the client directory:
+    ```bash
+    cd events_management_system/client
+    ```
+3. Install dependencies:
+    ```bash
+    npm install
+    ```
+4. Start the development server:
+    ```bash
+    npm start
+    ```
 
-## Development Server
+## Technologies Used
 
-Start the development server on `http://localhost:3000`:
+- React
+- Node.js
+- Express
+- MongoDB
 
-```bash
-# npm
-npm run dev
+## License
 
-# pnpm
-pnpm dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
-```
-
-## Production
-
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+This project is licensed under the MIT License.

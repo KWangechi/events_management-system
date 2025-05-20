@@ -37,7 +37,7 @@ RUN chmod +x /scripts/render-deploy.sh
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache /scripts/render-deploy.sh
 
 # # Expose ports
-# EXPOSE 80 9000
+EXPOSE 8000
 
 # ENV RUN_SCRIPTS 1
 
