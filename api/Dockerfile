@@ -1,4 +1,4 @@
-# Use the official PHP 8.2 FPM image as the base
+# Use the official PHP 8.4 FPM image as the base
 FROM php:8.4-fpm
 
 # Install system dependencies and PHP extensions (as above)
@@ -38,4 +38,4 @@ RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cac
 EXPOSE 80 9000
 
 # Start Nginx and PHP-FPM
-CMD service nginx start && php-fpm
+CMD ["./scripts/render-deploy.sh"]
