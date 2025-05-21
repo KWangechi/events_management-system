@@ -41,5 +41,5 @@ EXPOSE 8000
 
 # ENV RUN_SCRIPTS 1
 
-# # Start Nginx and PHP-FPM
-# CMD bash -c "php artisan config:cache && php artisan route:cache && nginx -g 'daemon off;' & php-fpm"
+# Generate application key and cache configuration
+CMD bash -c "php artisan config:cache && php artisan key:generate --show"
