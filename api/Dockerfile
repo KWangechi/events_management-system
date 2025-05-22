@@ -36,10 +36,17 @@ RUN composer install --optimize-autoloader --no-dev
 RUN chmod +x /scripts/render-deploy.sh
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache /scripts/render-deploy.sh
 
-# # Expose ports
-EXPOSE 80 443
+# Create directory for PHP-FPM socket
+RUN mkdir -p /var/run/php
+RUN chown -R www-data:www-data /var/run/php
+
+# # Expose ports (This will be overridden by Render)
+EXPOSE 80
 
 # ENV RUN_SCRIPTS 1
 
 # Generate application key and cache configuration
-CMD bash -c "php artisan config:cache && php artisan key:generate --show"
+CMD bash -c "php artisan config:cache && \
+             php artisan key:generate --show && \
+             php-fom -D && \
+             nginx -g 'daemon off;'"
