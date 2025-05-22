@@ -31,26 +31,26 @@ Route::middleware(['auth:sanctum', 'can:isSuperAdmin'])->group(function () {
 // Organization admins manage their own org's data
 Route::middleware('auth:sanctum')->prefix('/{organization:slug}')->group(function () {
     // Organization details
-    Route::get('/', [OrganizationController::class, 'show'])->name('organizations.show');
-    Route::post('/', [OrganizationController::class, 'store'])->name('organizations.store');
-    Route::put('/', [OrganizationController::class, 'update'])->name('organizations.update');
-    Route::delete('/', [OrganizationController::class, 'destroy'])->name('organizations.destroy');
+    Route::get('/', [OrganizationController::class, 'show'])->name('admin.organizations.show');
+    Route::post('/', [OrganizationController::class, 'store'])->name('admin.organizations.store');
+    Route::put('/', [OrganizationController::class, 'update'])->name('admin.organizations.update');
+    Route::delete('/', [OrganizationController::class, 'destroy'])->name('admin.organizations.destroy');
 
 
     // Events management
     Route::middleware([EnsureOrganizationAdmin::class])->group(function () {
-        Route::get('events', [EventController::class, 'index'])->name('events.index');
-        Route::post('events', [EventController::class, 'store'])->name('events.store');
-        Route::get('events/{eventId}', [EventController::class, 'show'])->name('events.show');
-        Route::patch('events/{eventId}', [EventController::class, 'update'])->name('events.update');
-        Route::delete('events/{eventId}', [EventController::class, 'destroy'])->name('events.destroy');
+        Route::get('events', [EventController::class, 'index'])->name('admin.events.index');
+        Route::post('events', [EventController::class, 'store'])->name('admin.events.store');
+        Route::get('events/{eventId}', [EventController::class, 'show'])->name('admin.events.show');
+        Route::patch('events/{eventId}', [EventController::class, 'update'])->name('admin.events.update');
+        Route::delete('events/{eventId}', [EventController::class, 'destroy'])->name('admin.events.destroy');
 
         // Attendees management (nested under events)
-        Route::get('events/{eventId}/attendees', [AttendeeController::class, 'index'])->name('attendees.index');
-        Route::post('events/{eventId}/attendees', [AttendeeController::class, 'store'])->name('attendees.store');
-        Route::get('events/{eventId}/attendees/{attendeeId}', [AttendeeController::class, 'show'])->name('attendees.show');
-        Route::patch('events/{eventId}/attendees/{attendeeId}', [AttendeeController::class, 'update'])->name('attendees.update');
-        Route::delete('events/{eventId}/attendees/{attendeeId}', [AttendeeController::class, 'destroy'])->name('attendees.destroy');
+        Route::get('events/{eventId}/attendees', [AttendeeController::class, 'index'])->name('admin.attendees.index');
+        Route::post('events/{eventId}/attendees', [AttendeeController::class, 'store'])->name('admin.attendees.store');
+        Route::get('events/{eventId}/attendees/{attendeeId}', [AttendeeController::class, 'show'])->name('admin.attendees.show');
+        Route::patch('events/{eventId}/attendees/{attendeeId}', [AttendeeController::class, 'update'])->name('admin.attendees.update');
+        Route::delete('events/{eventId}/attendees/{attendeeId}', [AttendeeController::class, 'destroy'])->name('admin.attendees.destroy');
     });
 });
 
