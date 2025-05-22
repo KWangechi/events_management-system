@@ -48,5 +48,5 @@ EXPOSE 80
 # Generate application key and cache configuration
 CMD bash -c "php artisan config:cache && \
              php artisan key:generate --show && \
-             php-fom -D && \
+             php-fpm -D && \
              nginx -g 'daemon off;'"
