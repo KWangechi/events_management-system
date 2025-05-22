@@ -6,7 +6,7 @@ export default defineNuxtConfig({
   modules: ['@nuxtjs/tailwindcss'],
   runtimeConfig: {
     public: {
-      apiBase: 'http://localhost:8000/api',
+      apiBase: 'https://shikisha-events-api.onrender.com/api',
     },
   },
 })
