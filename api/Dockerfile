@@ -30,7 +30,7 @@ COPY nginx.conf /etc/nginx/conf.d/default.conf
 COPY ./scripts/render-deploy.sh /scripts/render-deploy.sh
 
 # Install PHP dependencies
-RUN composer install --optimize-autoloader --no-dev
+RUN composer install --optimize-autoloader --no-dev --working-dir=/var/www/html
 
 # Set permissions
 RUN chmod +x /scripts/render-deploy.sh
@@ -47,6 +47,7 @@ EXPOSE 80
 
 # Generate application key and cache configuration
 CMD bash -c "php artisan config:cache && \
-             php artisan key:generate --show && \
-             php-fpm -D && \
-             nginx -g 'daemon off;'"
+    php artisan route:cache && \
+    php artisan key:generate --show && \
+    php-fpm -D && \
+    nginx -g 'daemon off;'"
