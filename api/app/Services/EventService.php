@@ -41,8 +41,5 @@ class EventService
     {
         return $this->eventRepository->find($id);
     }
-    // public function getEventsByOrganization($organizationId)
-    // {
-    //     return $this->eventRepository->findByOrganization($organizationId);
-    // }
+   
 }

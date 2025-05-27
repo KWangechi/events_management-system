@@ -56,7 +56,7 @@ Route::middleware('auth:sanctum')->prefix('/{organization:slug}')->group(functio
 
 // ------------------- PUBLIC ROUTES -------------------
 // View all events (across all organizations)
-Route::get('/events', [EventController::class, 'getAllEvents'])->name('events.getAllEvents');
+Route::get('/all-events', [EventController::class, 'getAllEvents'])->name('events.getAllEvents');
 
 // View events for a specific organization
 Route::get('/{organization}/events', [EventController::class, 'index'])->name('events.index');
