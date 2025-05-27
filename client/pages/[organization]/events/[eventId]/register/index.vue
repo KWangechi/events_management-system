@@ -9,7 +9,9 @@
       </p>
       <form @submit.prevent="handleRegister" class="space-y-5">
         <div>
-          <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Name</label>
+          <label for="name" class="block text-sm font-medium text-gray-700 mb-1"
+            >Name</label
+          >
           <input
             v-model="name"
             type="text"
@@ -20,7 +22,11 @@
           />
         </div>
         <div>
-          <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+          <label
+            for="email"
+            class="block text-sm font-medium text-gray-700 mb-1"
+            >Email</label
+          >
           <input
             v-model="email"
             type="email"
@@ -31,7 +37,11 @@
           />
         </div>
         <div>
-          <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">Phone</label>
+          <label
+            for="phone"
+            class="block text-sm font-medium text-gray-700 mb-1"
+            >Phone</label
+          >
           <input
             v-model="phone"
             type="tel"
@@ -44,42 +54,48 @@
         <button
           type="submit"
           class="w-full bg-primary text-white font-semibold py-2 rounded-lg hover:bg-primary/90 transition"
+          :class="{ 'opacity-50 cursor-not-allowed': loading }"
+          :disabled="loading"
         >
-          Register
+          {{ loading ? "Hold on..." : "Register" }}
         </button>
-        <p
-          v-if="message"
-          class="text-center mt-2 font-medium"
-          :class="message.includes('successful') ? 'text-green-600' : 'text-red-600'"
-        >
-          {{ message }}
-        </p>
       </form>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
+import type { User } from "@/types";
 import { ref } from "vue";
-import { useRoute, useRouter } from "vue-router";
-import { useApiFetch } from "@/composables/useFetchApi";
+
+const toast = useToast();
+const user = useSanctumUser<User>();
 
 const route = useRoute();
 const router = useRouter();
 const organization = route.params.organization as string;
-const eventId = ref((route.query.eventId as string) || "");
+const eventId = route.params.eventId as string;
 const name = ref("");
 const email = ref("");
 const phone = ref("");
-const message = ref("");
+const loading = ref(false);
+
+definePageMeta({
+  middleware: ["sanctum:auth"],
+});
 
 const handleRegister = async () => {
+  loading.value = true;
+  console.log(
+    `Registering for event ${eventId} at organization ${organization} user ${user.value}`
+  );
   const { error } = await useApiFetch(
-    `/${organization}/register`,
+    `/${organization}/events/${eventId}/register`,
     {
       method: "POST",
       body: {
-        event_id: eventId.value,
+        event_id: eventId,
+        userId: user.value?.id || null,
         name: name.value,
         email: email.value,
         phone: phone.value,
@@ -88,11 +104,31 @@ const handleRegister = async () => {
   );
 
   if (error.value) {
-    message.value = "Registration failed. Please try again.";
+    toast.error({
+      title: "Registration Failed",
+      message: error.value.message || "An error occurred while registering.",
+      timeout: 4000,
+      position: "topRight",
+    });
   } else {
-    message.value = "Registration successful! Thank you.";
-    setTimeout(() => router.push(`/${organization}/events`), 2000);
+    toast.success({
+      title: "Success!",
+      message: user.value
+        ? "Registration successful! Login to see your events."
+        : "Registration successful! Redirecting...",
+      timeout: 7000,
+      position: "topRight",
+    });
+
+    setTimeout(() => {
+      if (!user.value) {
+        router.push({ name: "login" });
+      } else {
+        router.push({ path: "/my-events" });
+      }
+    }, 4000);
   }
+  loading.value = false;
 };
 </script>
 

@@ -19,7 +19,7 @@ class EventController extends Controller
     public function getAllEvents()
     {
         $events = $this->eventService->getAllEvents();
-        return $this->successResponse($events, 'Events retrieved successfully');
+        return $this->successResponse($events, 'Success');
     }
 
 

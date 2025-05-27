@@ -1,7 +1,8 @@
 export type User = {
-  id: string;
-  name: string;
+  id?: string;
+  name?: string;
   email: string;
+  password?: string;
   role?: "admin" | "user" | "super_admin";
   organization_id?: number;
   createdAt?: Date;
@@ -9,14 +10,12 @@ export type User = {
 };
 
 export type Organization = {
-  id: string;
+  id?: string;
   name: string;
   slug: string;
   createdAt?: Date;
   updatedAt?: Date;
 };
-
-
 
 export type Event = {
   id: number;
@@ -27,6 +26,8 @@ export type Event = {
   price: number;
   maxAttendees: number;
   organization_id?: number;
+  organization_name?: string;
+  organization_slug?: string;
 
   created_at?: Date;
   updated_at?: Date;

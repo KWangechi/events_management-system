@@ -8,8 +8,13 @@
         </div>
         <div class="flex gap-6">
           <NuxtLink to="/" class="text-gray-700 hover:text-primary font-medium transition">Home</NuxtLink>
-          <NuxtLink to="/login" class="text-gray-700 hover:text-primary font-medium transition">Login</NuxtLink>
-          <NuxtLink to="/register" class="text-gray-700 hover:text-primary font-medium transition">Register</NuxtLink>
+          <template v-if="user">
+            <NuxtLink to="/my-events" class="text-gray-700 hover:text-primary font-medium transition">My Events</NuxtLink>
+          </template>
+          <template v-else>
+            <NuxtLink to="/login" class="text-gray-700 hover:text-primary font-medium transition">Login</NuxtLink>
+            <NuxtLink to="/register" class="text-gray-700 hover:text-primary font-medium transition">Register</NuxtLink>
+          </template>
         </div>
       </div>
     </nav>
@@ -24,8 +29,8 @@
   </div>
 </template>
 
-<script lang="ts">
-export default {
-  name: 'MainLayout',
-}
+<script lang="ts" setup>
+
+const user = useSanctumUser();
+
 </script>

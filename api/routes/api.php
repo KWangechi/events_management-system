@@ -22,7 +22,7 @@ Route::get('/{organization}/events', [EventController::class, 'index'])->name('e
 Route::get('/{organization}/events/{event}', [EventController::class, 'show'])->name('events.show');
 
 // Public attendee registration for an event
-Route::post('/{organization}/events/{event}/attendees', [AttendeeController::class, 'register'])->name('attendees.register');
+Route::post('/{organization}/events/{event}/register', [AttendeeController::class, 'register'])->name('attendees.register');
 
 // ------------------- AUTH ROUTES -------------------
 Route::controller(AuthController::class)->group(function () {

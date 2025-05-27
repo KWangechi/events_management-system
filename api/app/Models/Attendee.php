@@ -19,9 +19,15 @@ class Attendee extends Model
      */
     protected $fillable = [
         'event_id',
+        'user_id',
         'name',
         'email',
-        'phone'
+        'phone',
+        'registered_at',
+    ];
+
+    protected $casts = [
+        'registered_at' => 'datetime',
     ];
 
     public static function boot()

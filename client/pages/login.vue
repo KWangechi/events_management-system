@@ -2,22 +2,9 @@
   <div class="flex justify-center items-center max-h-screen">
     <div class="bg-white p-8 rounded-xl shadow-card w-full max-w-md">
       <h2 class="text-3xl font-bold text-center text-primary mb-6 font-sans">
-        Create a New Account
+        Welcome Back
       </h2>
-      <form @submit.prevent="handleRegister" class="space-y-5">
-        <div>
-          <label for="name" class="block text-sm font-medium text-gray-700 mb-1"
-            >Name</label
-          >
-          <input
-            v-model="user.name"
-            type="text"
-            id="name"
-            required
-            class="block w-full h-12 rounded-lg border border-gray-300 px-4 focus:border-primary focus:ring focus:ring-primary/20 focus:ring-opacity-50 transition"
-            placeholder="Your name"
-          />
-        </div>
+      <form @submit.prevent="handleLogin" class="space-y-5">
         <div>
           <label
             for="email"
@@ -54,16 +41,15 @@
           :class="{ 'opacity-50 cursor-not-allowed': loading }"
           :disabled="loading"
         >
-          Register
+          {{ loading ? "Logging in..." : "Login" }}
         </button>
-        <p v-if="error" class="text-red-500 text-sm text-center">{{ error }}</p>
         <p class="text-sm text-center">
-          <span class="text-gray-500 pr-2">👤Already have an account?</span>
+          <span class="text-gray-500 pr-2">👤Don't have an account?</span>
           <NuxtLink
-            to="/login"
+            to="/register"
             class="text-primary font-semibold hover:underline"
           >
-            Login here
+            Register here
           </NuxtLink>
         </p>
       </form>
@@ -72,37 +58,48 @@
 </template>
 
 <script lang="ts" setup>
+import type { User } from "@/types";
 import { ref } from "vue";
-import { useRouter } from "vue-router";
 
 const error = ref("");
-const user = ref({
-  name: "",
+const user = ref<User>({
   email: "",
   password: "",
 });
 const loading = ref(false);
-const router = useRouter();
 
 const toast = useToast();
-const handleRegister = async () => {
-  console.log("Register button clicked");
-  // Uncomment and use your API logic here
-  const { data, error: fetchError } = await useApiFetch("/register", {
-    method: "POST",
-    body: { email: user.value.email, password: user.value.password },
+
+const { login } = useSanctumAuth();
+
+const handleLogin = async () => {
+  console.log("Login attempt with:", {
+    email: user.value.email,
+    password: user.value.password,
   });
-  if (fetchError.value) {
-    error.value = "Registration failed. Please check your credentials.";
-  } else {
-    toast.success({
-      title: "Registration Successful",
-      message: "Redirecting to login...",
-      timeout: 3000,
-      position: "topRight",
+  loading.value = true;
+
+  try {
+    await login({
+      email: user.value.email,
+      password: user.value.password,
     });
-    // Redirect to login page after successful registration
-    router.push("/login");
+  } catch (err) {
+    console.error("Login error:", err);
+
+    if (typeof err === "string") {
+      error.value = err;
+    } else if (err instanceof Error) {
+      error.value = err.message;
+    } else {
+      error.value = "An unexpected error occurred.";
+    }
+    toast.error({
+      title: "Error!",
+      message: `${error.value} || Login failed. Please try again.`,
+      timeout: 30000,
+    });
   }
+  loading.value = false;
 };
 </script>
