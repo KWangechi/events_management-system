@@ -6,7 +6,7 @@ export default defineNuxtConfig({
   modules: ['@nuxtjs/tailwindcss'],
   runtimeConfig: {
     public: {
-      apiBase: 'https://shikisha-events-api.onrender.com/api',
+      apiBase: 'https://hedgehog-steady-suddenly.ngrok-free.app/api',
     },
   },
 })
