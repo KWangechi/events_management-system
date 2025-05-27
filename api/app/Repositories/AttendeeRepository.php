@@ -6,9 +6,11 @@ use App\Models\Attendee;
 
 class AttendeeRepository
 {
-    public function create(array $data)
+    public function create(array $data, $eventId)
     {
-        return Attendee::create($data);
+        $attendee = Attendee::firstOrCreate($data);
+        $attendee->events()->syncWithoutDetaching($eventId);
+        return $attendee;
     }
     public function update($id, array $data)
     {

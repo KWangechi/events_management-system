@@ -11,15 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('attendees', function (Blueprint $table) {
+        Schema::create('attendee_event', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users');
-            $table->string('name');
-            $table->string('email');
-            $table->string('phone');
-            $table->dateTime('registered_at')->default(now());
+            $table->foreignId('event_id')->constrained('events');
+            $table->foreignId('attendee_id')->constrained('attendees');
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 
@@ -28,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('attendees');
+        Schema::dropIfExists('attendee_event');
     }
 };

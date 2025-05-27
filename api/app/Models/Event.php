@@ -4,10 +4,11 @@ namespace App\Models;
 
 use App\Models\Scopes\OrganizationScope;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Event extends Model
 {
-    use \Illuminate\Database\Eloquent\Factories\HasFactory;
+    use \Illuminate\Database\Eloquent\Factories\HasFactory, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -61,6 +62,6 @@ class Event extends Model
      */
     public function attendees()
     {
-        return $this->hasMany(Attendee::class);
+        return $this->belongsToMany(Attendee::class);
     }
 }

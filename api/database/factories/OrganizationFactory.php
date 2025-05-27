@@ -22,16 +22,4 @@ class OrganizationFactory extends Factory
         ];
     }
 
-    /**
-     * Indicate that the model's name is 'Default Organization'.
-     *
-     * @return static
-     */
-    // public function default(): static
-    // {
-    //     return $this->state(fn(array $attributes) => [
-    //         'name' => 'Default Organization',
-    //         'slug' => 'default-organization',
-    //     ]);
-    // }
 }

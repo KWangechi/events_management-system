@@ -9,7 +9,7 @@
       </p>
       <div
         v-if="events.length"
-        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-y-12 gap-x-8"
+        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-12 gap-x-8"
       >
         <div
           v-for="event in events"
@@ -55,8 +55,10 @@
             <button
               @click="registerForEvent(event.id, event)"
               class="mt-auto w-full bg-primary text-white font-semibold py-2 rounded-lg hover:bg-primary/90 transition"
+              :class="{ 'opacity-50 cursor-not-allowed': loading }"
+              :disabled="loading"
             >
-              Register
+              {{ loading ? "..." : "Register" }}
             </button>
           </div>
         </div>
@@ -72,8 +74,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import { ref, toDisplayString } from "vue";
 import type { EventApiResponse, Event as OrgEvent } from "@/types";
 
 const route = useRoute();
@@ -81,25 +82,73 @@ const router = useRouter();
 let organizationSlug = route.params.organization as string;
 const events = ref<OrgEvent[]>([]);
 const message = ref("");
+const toast = useToast();
+const loading = ref(false);
 
 const { data } = await useApiFetch<EventApiResponse>(`/all-events`);
 events.value = data.value?.data || [];
 
-const registerForEvent = (eventId: number, event: OrgEvent) => {
-  console.log(
-    `Registering for event ${event.title} at organization ${
-      organizationSlug || event.organization_slug
-    }`
-  );
+// const registerForEvent = (eventId: number, event: OrgEvent) => {
+//   console.log(
+//     `Registering for event ${event.title} at organization ${
+//       organizationSlug || event.organization_slug
+//     }`
+//   );
 
-  if (event.organization_slug) organizationSlug = event.organization_slug;
-  if (!organizationSlug) {
-    message.value = "Invalid organization or event ID.";
-    return;
+//   if (event.organization_slug) organizationSlug = event.organization_slug;
+//   if (!organizationSlug) {
+//     message.value = "Invalid organization or event ID.";
+//     return;
+//   }
+
+//   // get to route to register for event
+//   const registerUrl = `/${organizationSlug}/events/${eventId}/register`;
+//   router.push(registerUrl);
+// };
+
+const registerForEvent = async (eventId: number, orgEvent: OrgEvent) => {
+  const organization = orgEvent.organization_slug;
+  // Check if attendee already exists for this user
+  const { data: attendeeData } = await useApiFetch<{
+    success: boolean;
+    message: string;
+    data: any;
+  }>(`/${organization}/events/${eventId}/attendee/me`);
+
+  if (attendeeData.value?.data) {
+    const { error, data } = await useApiFetch(
+      `/${organization}/events/${eventId}/register`,
+      {
+        method: "POST",
+        body: {
+          name: attendeeData.value.data.name,
+          email: attendeeData.value.data.email,
+          phone: attendeeData.value.data.phone,
+        },
+      }
+    );
+
+    if (error.value) {
+      toast.error({
+        title: "Registration Failed",
+        message: error.value.message || "An error occurred while registering.",
+        timeout: 4000,
+        position: "topRight",
+      });
+    } else {
+      toast.success({
+        title: "Success!",
+        message: "Registration successful! Redirecting to your events...",
+        timeout: 5000,
+        position: "topRight",
+      });
+
+      router.replace({ path: "/my-events" });
+    }
+    loading.value = false;
+  } else {
+    // Go to registration form with eventId
+    router.push(`/${organization}/register?eventId=${eventId}`);
   }
-
-  // get to route to register for event
-  const registerUrl = `/${organizationSlug}/events/${eventId}/register`;
-  router.push(registerUrl);
 };
 </script>

@@ -86,14 +86,22 @@ const router = useRouter();
 
 const toast = useToast();
 const handleRegister = async () => {
-  console.log("Register button clicked");
+  loading.value = true;
   // Uncomment and use your API logic here
   const { data, error: fetchError } = await useApiFetch("/register", {
     method: "POST",
-    body: { email: user.value.email, password: user.value.password },
+    body: {
+      name: user.value.name,
+      email: user.value.email,
+      password: user.value.password,
+    },
   });
   if (fetchError.value) {
-    error.value = "Registration failed. Please check your credentials.";
+    toast.error({
+      title: "Error",
+      message: "Something happened",
+      timeout: 2000,
+    });
   } else {
     toast.success({
       title: "Registration Successful",
@@ -104,5 +112,6 @@ const handleRegister = async () => {
     // Redirect to login page after successful registration
     router.push("/login");
   }
+  loading.value = false;
 };
 </script>

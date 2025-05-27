@@ -84,20 +84,21 @@ const handleLogin = async () => {
       email: user.value.email,
       password: user.value.password,
     });
+    toast.success({
+      title: "Success",
+      message: "Logged in!",
+      timeout: 2000,
+      position: "topRight",
+    });
   } catch (err) {
     console.error("Login error:", err);
 
-    if (typeof err === "string") {
-      error.value = err;
-    } else if (err instanceof Error) {
-      error.value = err.message;
-    } else {
-      error.value = "An unexpected error occurred.";
-    }
     toast.error({
-      title: "Error!",
-      message: `${error.value} || Login failed. Please try again.`,
-      timeout: 30000,
+      title: "Error",
+      message:
+        typeof err === "object" ? err?.data?.message : "Something went wrong",
+      timeout: 2000,
+      position: "topRight",
     });
   }
   loading.value = false;

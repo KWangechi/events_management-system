@@ -5,6 +5,7 @@ use App\Http\Controllers\AttendeeController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Middleware\EnsureOrganizationAdmin;
+use App\Models\Attendee;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -21,8 +22,6 @@ Route::get('all-events', [EventController::class, 'getAllEvents'])->name('events
 Route::get('/{organization}/events', [EventController::class, 'index'])->name('events.index');
 Route::get('/{organization}/events/{event}', [EventController::class, 'show'])->name('events.show');
 
-// Public attendee registration for an event
-Route::post('/{organization}/events/{event}/register', [AttendeeController::class, 'register'])->name('attendees.register');
 
 // ------------------- AUTH ROUTES -------------------
 Route::controller(AuthController::class)->group(function () {
@@ -33,9 +32,17 @@ Route::controller(AuthController::class)->group(function () {
 
 // ------------------- SUPER ADMIN ROUTES -------------------
 // Only super admins can create organizations
-Route::middleware(['auth:sanctum', 'can:isSuperAdmin'])->group(function () {
+Route::middleware(['auth:sanctum',])->group(function () {
     Route::post('/organizations', [OrganizationController::class, 'store'])->name('organizations.store');
     Route::get('/organizations', [OrganizationController::class, 'index'])->name('organizations.index');
+
+    // View my events
+    Route::get('/my-events', [AttendeeController::class, 'getMyEvents']);
+    // Public attendee registration for an event
+    Route::post('/{organization}/events/{event}/register', [AttendeeController::class, 'register'])->name('attendees.register');
+    Route::get('/{organization}/events/{event}/attendee/me', [AttendeeController::class, 'show'])->name('attendees.show');
+    Route::delete('/{organization}/events/{event}/attendee/me', [AttendeeController::class, 'cancelRegistration'])->name('attendees.cancelRegistration');
+    
 });
 
 // ------------------- ORGANIZATION ADMIN ROUTES -------------------
@@ -64,5 +71,3 @@ Route::middleware('auth:sanctum')->prefix('/admin/{organization:slug}')->group(f
         Route::delete('events/{eventId}/attendees/{attendeeId}', [AttendeeController::class, 'destroy'])->name('admin.attendees.destroy');
     });
 });
-
-

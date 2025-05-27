@@ -5,11 +5,11 @@
         View your Events
       </h1>
       <div
-        v-if="events.length"
-        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
+        v-if="attendeeEvent?.events.length"
+        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-12"
       >
         <div
-          v-for="event in events"
+          v-for="event in attendeeEvent?.events"
           :key="event.id"
           class="bg-white rounded-xl shadow-card hover:shadow-lg transition-shadow duration-200 overflow-hidden flex flex-col"
         >
@@ -21,11 +21,6 @@
               alt="Event image"
               class="object-cover w-full h-full"
             />
-            <!-- <span
-              class="text-5xl text-primary font-bold"
-            >
-              {{ event.title.charAt(0) }}
-            </span> -->
           </div>
           <div class="flex-1 flex flex-col p-6">
             <h3 class="text-lg font-semibold text-primary mb-1 line-clamp-1">
@@ -49,12 +44,18 @@
                 }}</span
               >
             </div>
-            <button
-              @click="registerForEvent(event.id)"
-              class="mt-auto w-full bg-primary text-white font-semibold py-2 rounded-lg hover:bg-primary/90 transition"
-            >
-              Register
-            </button>
+
+            <div class="flex items-center justify-between mb-2">
+              <p class="font-bold text-black flex items-center">
+                🎟️ <span class="ml-2">You are going</span>
+              </p>
+              <button
+                @click="cancelEventRegistration(event.id, event)"
+                class="bg-red-300 text-white font-semibold py-2 px-4 rounded-lg hover:bg-red/100 transition btn-sm"
+              >
+                {{ loading ? "..." : "Cancel" }}
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -75,21 +76,50 @@
 
 <script lang="ts" setup>
 import { ref } from "vue";
-import { useRoute, useRouter } from "vue-router";
-import type { EventApiResponse, Event as OrgEvent } from "@/types";
+import type {
+  AttendeeEvent,
+  AttendeeEventResponse,
+  Event as OrgEvent,
+} from "@/types";
 
 const route = useRoute();
 const router = useRouter();
-const organization = route.params.organization as string;
-const events = ref<OrgEvent[]>([]);
+const attendeeEvent = ref<AttendeeEvent>();
 const message = ref("");
+const toast = useToast();
+const loading = ref(false);
 
-import { useApiFetch } from "@/composables/useFetchApi";
+const { data } = await useApiFetch<AttendeeEventResponse>(`/my-events`);
+attendeeEvent.value = data.value?.data;
 
-const { data } = await useApiFetch<EventApiResponse>(`/${organization}/events`);
-events.value = data.value?.data || [];
+const cancelEventRegistration = (eventId: number, event: OrgEvent) => {
+  const orgSlug = event.organization_slug;
+  const { error, data } = useApiFetch(
+    `/${orgSlug}/events/${eventId}/attendee/me`,
+    {
+      method: "DELETE",
+    }
+  );
 
-const registerForEvent = (eventId: number) => {
-  router.push(`/${organization}/register?eventId=${eventId}`);
+  console.log(data.value);
+
+  if (error.value) {
+    toast.error({
+      title: "Cancellation Failed",
+      message: error.value.message || "An error occurred while cancelling.",
+      timeout: 4000,
+      position: "topRight",
+    });
+  } else {
+    toast.success({
+      title: "Success!",
+      message: "Event Cancellation successful! Redirecting to your events...",
+      timeout: 5000,
+      position: "topRight",
+    });
+
+    window.location.reload();
+  }
+  loading.value = false;
 };
 </script>

@@ -62,14 +62,7 @@ class User extends Authenticatable
         return $this->belongsTo(Organization::class, 'organization_id');
     }
 
-    /**
-     * The boo
-     */
-    // public static function boot()
-    // {
-    //     parent::boot();
-
-    //     static::addGlobalScope(new \App\Models\Scopes\OrganizationScope);
-    // }
-
+    public function attendee() {
+        return $this->hasOne(Attendee::class);
+    }
 }

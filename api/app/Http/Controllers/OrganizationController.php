@@ -5,11 +5,13 @@ namespace App\Http\Controllers;
 use App\Http\Requests\OrganizationRequest;
 use App\Models\Organization;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class OrganizationController extends Controller
 {
     public function index()
     {
+
         $organizations = Organization::all();
         return $this->successResponse($organizations, 'Organizations retrieved successfully');
     }

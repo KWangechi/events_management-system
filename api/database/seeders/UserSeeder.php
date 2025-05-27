@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Event;
 use App\Models\Organization;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -34,6 +35,10 @@ class UserSeeder extends Seeder
         // Create 3 organizations and 2 users for each organization
         Organization::factory(3)->create()->each(function ($organization) {
             User::factory(2)->create();
+            Event::factory(7)->create();
         });
+
+        // Create 25 events each belonging to a certain organization
+
     }
 }

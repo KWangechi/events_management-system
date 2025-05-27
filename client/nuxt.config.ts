@@ -15,11 +15,13 @@ export default defineNuxtConfig({
     endpoints: {
       login: "/login",
       logout: "/logout",
-      user: "/user"
+      user: "/user",
     },
+    redirectIfAuthenticated: true,
     redirect: {
       onLogout: "/login",
       keepRequestedRoute: true,
+      onAuthOnly: "/login"
     },
     globalMiddleware: {
       enabled: false,

@@ -33,10 +33,28 @@ export type Event = {
   updated_at?: Date;
 };
 
+export type AttendeeEvent = {
+  id?: number;
+  user_id?: number;
+  name: string;
+  email: string;
+  phone: string;
+  events: Event[];
+
+  created_at?: Date;
+  updated_at?: Date;
+};
+
 export type EventApiResponse = {
   success: boolean;
   message: string;
   data: Event[];
+};
+
+export type AttendeeEventResponse = {
+  success: boolean;
+  message: string;
+  data: AttendeeEvent;
 };
 
 export type Attendee = {

@@ -80,22 +80,24 @@ const email = ref("");
 const phone = ref("");
 const loading = ref(false);
 
-definePageMeta({
-  middleware: ["sanctum:auth"],
-});
+const { isAuthenticated } = useSanctumAuth();
+
+if (!isAuthenticated.value) {
+  navigateTo("/login");
+}
 
 const handleRegister = async () => {
   loading.value = true;
   console.log(
-    `Registering for event ${eventId} at organization ${organization} user ${user.value}`
+    `Registering for event ${eventId} at organization ${organization} user ${user.value?.name}`
   );
-  const { error } = await useApiFetch(
+  const { error, data } = await useApiFetch(
     `/${organization}/events/${eventId}/register`,
     {
       method: "POST",
       body: {
         event_id: eventId,
-        userId: user.value?.id || null,
+        user_id: user.value?.id || null,
         name: name.value,
         email: email.value,
         phone: phone.value,
@@ -113,20 +115,12 @@ const handleRegister = async () => {
   } else {
     toast.success({
       title: "Success!",
-      message: user.value
-        ? "Registration successful! Login to see your events."
-        : "Registration successful! Redirecting...",
-      timeout: 7000,
+      message: "Registration successful! Redirecting to your events...",
+      timeout: 5000,
       position: "topRight",
     });
 
-    setTimeout(() => {
-      if (!user.value) {
-        router.push({ name: "login" });
-      } else {
-        router.push({ path: "/my-events" });
-      }
-    }, 4000);
+    router.replace({ path: "/my-events" });
   }
   loading.value = false;
 };

@@ -1,18 +1,15 @@
-import { useFetch } from 'nuxt/app'
-
-const baseUrl = 'http://localhost:8000/api'
+const baseUrl = "http://localhost:8000/api";
 
 export function useApiFetch<T>(endpoint: string, options: any = {}) {
-  let token = ''
-  if (import.meta.client) {
-    token = localStorage.getItem('token') || ''
-  }
+  // let token;
+  const token = useCookie("sanctum.token.cookie");
+  // console.log("mY TOKEN", token.value);
 
   return useFetch<T>(`${baseUrl}${endpoint}`, {
     ...options,
     headers: {
       ...(options.headers || {}),
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${token.value}`,
     },
-  })
+  });
 }

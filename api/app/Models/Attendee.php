@@ -18,7 +18,6 @@ class Attendee extends Model
      * @var list<string>
      */
     protected $fillable = [
-        'event_id',
         'user_id',
         'name',
         'email',
@@ -37,8 +36,13 @@ class Attendee extends Model
         static::addGlobalScope(new EventScope);
     }
 
-    public function event()
+    public function events()
     {
-        return $this->belongsTo(Event::class);
+        return $this->belongsToMany(Event::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }
