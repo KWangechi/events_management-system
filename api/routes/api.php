@@ -13,6 +13,17 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 
+// ------------------- PUBLIC ROUTES -------------------
+// View all events (across all organizations)
+Route::get('all-events', [EventController::class, 'getAllEvents'])->name('events.getAllEvents');
+
+// View events for a specific organization
+Route::get('/{organization}/events', [EventController::class, 'index'])->name('events.index');
+Route::get('/{organization}/events/{event}', [EventController::class, 'show'])->name('events.show');
+
+// Public attendee registration for an event
+Route::post('/{organization}/events/{event}/attendees', [AttendeeController::class, 'register'])->name('attendees.register');
+
 // ------------------- AUTH ROUTES -------------------
 Route::controller(AuthController::class)->group(function () {
     Route::post('register', 'register')->name('register');
@@ -29,7 +40,7 @@ Route::middleware(['auth:sanctum', 'can:isSuperAdmin'])->group(function () {
 
 // ------------------- ORGANIZATION ADMIN ROUTES -------------------
 // Organization admins manage their own org's data
-Route::middleware('auth:sanctum')->prefix('/{organization:slug}')->group(function () {
+Route::middleware('auth:sanctum')->prefix('/admin/{organization:slug}')->group(function () {
     // Organization details
     Route::get('/', [OrganizationController::class, 'show'])->name('admin.organizations.show');
     Route::post('/', [OrganizationController::class, 'store'])->name('admin.organizations.store');
@@ -39,7 +50,7 @@ Route::middleware('auth:sanctum')->prefix('/{organization:slug}')->group(functio
 
     // Events management
     Route::middleware([EnsureOrganizationAdmin::class])->group(function () {
-        Route::get('events', [EventController::class, 'index'])->name('admin.events.index');
+        Route::get('/events', [EventController::class, 'index'])->name('admin.events.index');
         Route::post('events', [EventController::class, 'store'])->name('admin.events.store');
         Route::get('events/{eventId}', [EventController::class, 'show'])->name('admin.events.show');
         Route::patch('events/{eventId}', [EventController::class, 'update'])->name('admin.events.update');
@@ -54,13 +65,4 @@ Route::middleware('auth:sanctum')->prefix('/{organization:slug}')->group(functio
     });
 });
 
-// ------------------- PUBLIC ROUTES -------------------
-// View all events (across all organizations)
-Route::get('/all-events', [EventController::class, 'getAllEvents'])->name('events.getAllEvents');
 
-// View events for a specific organization
-Route::get('/{organization}/events', [EventController::class, 'index'])->name('events.index');
-Route::get('/{organization}/events/{event}', [EventController::class, 'show'])->name('events.show');
-
-// Public attendee registration for an event
-Route::post('/{organization}/events/{event}/attendees', [AttendeeController::class, 'register'])->name('attendees.register');

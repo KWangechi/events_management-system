@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Services\EventService;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class EventController extends Controller
 {
@@ -41,7 +42,7 @@ class EventController extends Controller
 
 
         $createdEvent = $this->eventService->createEvent($data);
-        return $this->successResponse($createdEvent, 'Event Created!', 201);
+        return $this->successResponse($createdEvent, 'Event Created!', Response::HTTP_CREATED);
     }
 
     public function show($orgSlug, $id)
