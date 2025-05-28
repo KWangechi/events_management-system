@@ -93,10 +93,17 @@ class AttendeeService
 
         $this->eventExists($eventId);
 
+        // See if user has registered for this event
         $attendee = Attendee::where('user_id', $userId)
+            ->whereHas('events', function ($query) use ($eventId) {
+                $query->where('events.id', $eventId);
+            })
             ->first();
 
-        // dd($attendee);
+        if (!$attendee) {
+            abort(Response::HTTP_NOT_FOUND, 'User is not registered for this event');
+        }
+
         return $attendee->events()->detach($eventId);
     }
 }

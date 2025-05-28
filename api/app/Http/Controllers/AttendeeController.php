@@ -95,7 +95,7 @@ class AttendeeController extends Controller
         return $this->successResponse($attendee, 'Registration successful', Response::HTTP_OK);
     }
 
-    public function cancelRegistration($orgSlug, $eventId)
+    public function cancelRegistration($eventId)
     {
 
         $this->attendeeService->detachAttendeeEvent($eventId);

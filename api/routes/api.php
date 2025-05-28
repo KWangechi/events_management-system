@@ -41,8 +41,8 @@ Route::middleware(['auth:sanctum',])->group(function () {
     // Public attendee registration for an event
     Route::post('/{organization}/events/{event}/register', [AttendeeController::class, 'register'])->name('attendees.register');
     Route::get('/{organization}/events/{event}/attendee/me', [AttendeeController::class, 'show'])->name('attendees.show');
-    Route::delete('/{organization}/events/{event}/attendee/me', [AttendeeController::class, 'cancelRegistration'])->name('attendees.cancelRegistration');
-    
+    Route::delete('/events/{event}/attendee/me', [AttendeeController::class, 'cancelRegistration'])->name('attendees.cancelRegistration');
+
 });
 
 // ------------------- ORGANIZATION ADMIN ROUTES -------------------
