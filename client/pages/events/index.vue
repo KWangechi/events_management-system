@@ -148,7 +148,7 @@ const registerForEvent = async (eventId: number, orgEvent: OrgEvent) => {
     loading.value = false;
   } else {
     // Go to registration form with eventId
-    router.push(`/${organization}/register?eventId=${eventId}`);
+    router.replace(`/${organization}/events/${eventId}/register`);
   }
 };
 </script>
