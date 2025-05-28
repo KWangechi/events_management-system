@@ -1,9 +1,8 @@
-const baseUrl = "http://localhost:8000/api";
-
 export function useApiFetch<T>(endpoint: string, options: any = {}) {
-  // let token;
+  const config = useRuntimeConfig();
+  const baseUrl = config.public.apiBase;
+
   const token = useCookie("sanctum.token.cookie");
-  // console.log("mY TOKEN", token.value);
 
   return useFetch<T>(`${baseUrl}${endpoint}`, {
     ...options,

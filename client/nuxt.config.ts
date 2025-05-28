@@ -1,4 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+
+console.log("Base Url", import.meta.env.NUXT_PUBLIC_API_BASE);
 export default defineNuxtConfig({
   compatibilityDate: "2025-05-15",
   devtools: { enabled: true },
@@ -6,12 +8,14 @@ export default defineNuxtConfig({
   modules: ["@nuxtjs/tailwindcss", "nuxt-auth-sanctum", "nuxt-toast"],
   runtimeConfig: {
     public: {
-      apiBase: "http://localhost:8000/api",
+      apiBase:
+        process.env.NUXT_PUBLIC_API_BASE || "http://localhost:8000/api",
     },
   },
   sanctum: {
     mode: "token",
-    baseUrl: "http://localhost:8000/api",
+    baseUrl:
+      process.env.NUXT_PUBLIC_API_BASE || "http://localhost:8000/api",
     endpoints: {
       login: "/login",
       logout: "/logout",
@@ -21,7 +25,7 @@ export default defineNuxtConfig({
     redirect: {
       onLogout: "/login",
       keepRequestedRoute: true,
-      onAuthOnly: "/login"
+      onAuthOnly: "/login",
     },
     globalMiddleware: {
       enabled: false,
